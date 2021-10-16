@@ -50,3 +50,15 @@ input[type="text"], textarea {
     margin: 10px;
     display: block;
 }
+
+.hideSection  {
+    display: none;
+}
+
+.focusButton {
+    background-color: #0d6efd;
+    height: 35px;
+    width: 35px;
+    border: none;
+    color: white;
+}

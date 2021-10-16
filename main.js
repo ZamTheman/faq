@@ -20,6 +20,21 @@ const getContent = () => {
                 text: 'Varje besökare måste ha en dedikerad värd under hela besöket'
             }
         ]
+    },{
+        id: 1,
+        mainHeader: 'Besökare',
+        subContent: [
+            {
+                id: 0,
+                subHeader: 'Kostnad',
+                text: '50 kr i timmen'
+            },
+            {
+                id: 1,
+                subHeader: 'Värd',
+                text: 'Varje besökare måste ha en dedikerad värd under hela besöket'
+            }
+        ]
     }]
 }
 
@@ -69,14 +84,20 @@ const renderContent = () => {
     mainContentDiv.innerHTML = '';
     for (const mainCont of content) {
         const mainDiv = document.createElement('section');
+        const headerDiv = document.createElement('div');
+        headerDiv.classList.add('fullWidth');
+        mainDiv.appendChild(headerDiv);
         const mainHeader = document.createElement('h1');
         mainHeader.innerText = mainCont.mainHeader;
-        mainDiv.appendChild(mainHeader);
+        headerDiv.appendChild(mainHeader);
+        const subContentContainer = document.createElement('div');
+        mainDiv.appendChild(subContentContainer);
         const deleteMainBtn = document.createElement('button');
         const addMainBtn = document.createElement('button');
         const editMainBtn = document.createElement('button');
         const upperMainButtonDiv = document.createElement('div');
         upperMainButtonDiv.className = 'rightAlign';
+        const expandButton = document.createElement('button');
         if (isEditMode) {
             deleteMainBtn.innerText = 'Ta bort';
             deleteMainBtn.onclick = () => {
@@ -116,31 +137,31 @@ const renderContent = () => {
                 saveHeaderBtn.onclick = () => {
                     mainCont.mainHeader = editHeader.value;
                     mainHeader.innerText = editHeader.value;
-                    mainDiv.insertBefore(mainHeader, editMainDiv);
-                    mainDiv.insertBefore(upperMainButtonDiv, editMainDiv);
-                    mainDiv.removeChild(editMainDiv);
+                    subContentContainer.insertBefore(mainHeader, editMainDiv);
+                    subContentContainer.insertBefore(upperMainButtonDiv, editMainDiv);
+                    subContentContainer.removeChild(editMainDiv);
                     saveContent();
                 };
 
                 const cancelHeaderBtn = document.createElement('button');
                 cancelHeaderBtn.innerText = 'Avbryt';
                 cancelHeaderBtn.onclick = () => {
-                    mainDiv.insertBefore(mainHeader, editMainDiv);
-                    mainDiv.insertBefore(upperMainButtonDiv, editMainDiv);
-                    mainDiv.removeChild(editMainDiv);
+                    subContentContainer.insertBefore(mainHeader, editMainDiv);
+                    subContentContainer.insertBefore(upperMainButtonDiv, editMainDiv);
+                    subContentContainer.removeChild(editMainDiv);
                 };
 
                 editMainDiv.appendChild(editHeader);
                 editMainDiv.appendChild(saveHeaderBtn);
                 editMainDiv.appendChild(cancelHeaderBtn);
-                mainDiv.insertBefore(editMainDiv, mainHeader);
-                mainDiv.removeChild(mainHeader);
-                mainDiv.removeChild(upperMainButtonDiv);
+                subContentContainer.insertBefore(editMainDiv, mainHeader);
+                subContentContainer.removeChild(mainHeader);
+                subContentContainer.removeChild(upperMainButtonDiv);
             };
             
             upperMainButtonDiv.appendChild(deleteMainBtn);
             upperMainButtonDiv.appendChild(editMainBtn);
-            mainDiv.appendChild(upperMainButtonDiv);
+            headerDiv.appendChild(upperMainButtonDiv);
         }
 
         for (const subCont of mainCont.subContent) {
@@ -226,7 +247,31 @@ const renderContent = () => {
                 subDiv.appendChild(editSubBtn);
             }
 
-            mainDiv.appendChild(subDiv);
+            subContentContainer.appendChild(subDiv);
+        }
+
+        if (!isEditMode){
+            const icon = document.createElement('i');
+            icon.classList.add('bi');
+            icon.classList.add('bi-arrows-expand');
+            expandButton.appendChild(icon);
+            expandButton.classList.add('rightAlign');
+            expandButton.classList.add('focusButton');
+            subContentContainer.classList.add('hideSection');
+            expandButton.onclick = () => {
+                if (icon.classList.contains('bi-arrows-expand')) {
+                    icon.classList.remove('bi-arrows-expand');
+                    icon.classList.add('bi-arrows-collapse');
+                    subContentContainer.classList.remove('hideSection');
+                }
+                else {
+                    icon.classList.add('bi-arrows-expand');
+                    icon.classList.remove('bi-arrows-collapse');
+                    subContentContainer.classList.add('hideSection');
+                }
+            }
+
+            headerDiv.appendChild(expandButton);
         }
 
         if (isEditMode){
