@@ -1,53 +1,27 @@
 let content = [];
 let isEditMode = false;
 
-// --- Should be replaced with server calls ---
-const getContent = () => {
-    // Get content from server
-    // Included is just example text
-    return [{
-        id: 0,
-        mainHeader: 'Besökare',
-        subContent: [
-            {
-                id: 0,
-                subHeader: 'Kostnad',
-                text: '50 kr i timmen'
-            },
-            {
-                id: 1,
-                subHeader: 'Värd',
-                text: 'Varje besökare måste ha en dedikerad värd under hela besöket'
-            }
-        ]
-    },{
-        id: 1,
-        mainHeader: 'Besökare',
-        subContent: [
-            {
-                id: 0,
-                subHeader: 'Kostnad',
-                text: '50 kr i timmen'
-            },
-            {
-                id: 1,
-                subHeader: 'Värd',
-                text: 'Varje besökare måste ha en dedikerad värd under hela besöket'
-            }
-        ]
-    }]
+const getContent = (k) => {
+    // Get content from server                                                                                                    
+    $.post("./readContent.php")
+        .done(function(json) {
+            content = JSON.parse(json);
+            k();
+        });
 }
 
 const saveContent = () => {
-    console.log(content);
-    // Save content to server
+    // Save content to server                                                                                                    
+    $.post("./writeContent.php", { "D": JSON.stringify(content) })
+        .done(function(msg) {
+            console.log(msg);
+        });
 }
 
 const canEdit = () => {
     // Check if logged in user have permission to edit
     return true;
 }
-// -------------------------------------------
 
 const getHighestMainId = () => {
     let id = 0;
